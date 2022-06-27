@@ -5,6 +5,7 @@ import {
   Button,
   TextInput,
   Modal,
+  MantineProvider, 
 } from "@mantine/core";
 import styles from "./creditCard.module.css";
 import {
@@ -173,6 +174,17 @@ export default function CreditCard() {
     }
   };
   return (
+    <MantineProvider
+    theme={{
+      shadows: {
+        xs: '1px 1px 1px rgba(0, 0, 0, 0.3)',
+        sm: '1px 1px 4px rgba(0, 0, 0, 0.4)',
+        md: '3px 3px 4px rgba(0, 0, 0, 0.4)',
+        lg: '3px 3px 4px 5px rgba(0, 0, 0, 0.4)',
+        xl: '3px 3px 4px 15px rgba(0, 0, 0, 0.4)',
+      },
+    }}
+    >
     <Container
       size={600}
       px={20}
@@ -190,12 +202,13 @@ export default function CreditCard() {
         description="Please enter your credit card information, we need some money"
       >
         <TextInput
-          style={{ marginTop: 20 }}
+          className='text'
           label="Card Number"
           icon={<Num1 />}
           placeholder="0000 0000 0000 0000"
           maxLength="19"
           radius="md"
+          
           size="md"
           onChange={handleCardNumber}
           value={cardNumber}
@@ -206,6 +219,7 @@ export default function CreditCard() {
         />
 
         <TextInput
+        className='text'
           style={{ marginTop: 20 }}
           label="Expiration Date"
           icon={<Calendar />}
@@ -221,6 +235,7 @@ export default function CreditCard() {
           name="ExpData"
         />
         <TextInput
+        className='text'
           style={{ marginTop: 20 }}
           label="CVV"
           icon={<Key />}
@@ -235,6 +250,7 @@ export default function CreditCard() {
           maxLength="3"
         />
         <TextInput
+        className='text'
           style={{ marginTop: 20 }}
           label="Amount"
           icon={<CurrencyRubel />}
@@ -271,5 +287,6 @@ export default function CreditCard() {
         Внесенная сумма: {modalSumm} руб.
       </Modal>
     </Container>
+    </MantineProvider>
   );
 }
