@@ -25,7 +25,7 @@ export default function CreditCard() {
   const [CVVDirty, setCVVDirty] = useState(false);
   const [expDateDirty, setExpDateDirty] = useState(false);
   const [amountDirty, setAmountDirty] = useState(false);
-  
+
   //состояние ошибок
   const [cardNumberError, setCardNumberError] = useState(
     'Поле "Card number" не может быть пустым'
@@ -40,8 +40,8 @@ export default function CreditCard() {
   const [formValid, setFormValid] = useState(false);
   //модальное окно и данные к нему
   const [opened, setOpened] = useState(false);
-  const [modalText, setModalText] = useState('')
-  const [modalSumm, setModalSumm] = useState('')
+  const [modalText, setModalText] = useState("");
+  const [modalSumm, setModalSumm] = useState("");
   useEffect(() => {
     if (cardNumberError || expirationDateError || CVVError || amountError) {
       setFormValid(false);
@@ -81,21 +81,20 @@ export default function CreditCard() {
 
   function handleAmount(e) {
     const { value } = e.target;
-    e.target.value =
-      value
-        .replace(/[^+\d]/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-        // ?.join(".")
-        // .substr(0, 19) || "";
-    
+    e.target.value = value
+      .replace(/[^+\d]/g, "")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // ?.join(".")
+    // .substr(0, 19) || "";
+
     setAmount(e.target.value);
 
     const reg = /^\d*\.?\d*$/;
     if (!reg.test(String(e.target.value).toLowerCase())) {
       setamountError('В сумму только цифры и может быть одна "точка"');
     }
-    if(e.target.value.length===0){
-      setamountError('Поле "Сумма" не может быть пустым')
+    if (e.target.value.length === 0) {
+      setamountError('Поле "Сумма" не может быть пустым');
     } else {
       setamountError("");
     }
@@ -121,12 +120,12 @@ export default function CreditCard() {
     setCVVDirty(false);
     setCardNumberDirty(false);
     setExpDateDirty(false);
-    setFormValid(false)
-    setCardNumberError('Поле "Card number" не может быть пустым')
-    setCVVError('Поле "CVV" не может быть пустым')
-    setExpirationDateError('Поле "Expiration Date" не может быть пустым')
-    setamountError('Введите сумму')
-    let newData = expDate.split('-').reverse().join('/')
+    setFormValid(false);
+    setCardNumberError('Поле "Card number" не может быть пустым');
+    setCVVError('Поле "CVV" не может быть пустым');
+    setExpirationDateError('Поле "Expiration Date" не может быть пустым');
+    setamountError("Введите сумму");
+    let newData = expDate.split("-").reverse().join("/");
     let card = {
       cardNumber,
       newData,
@@ -134,29 +133,27 @@ export default function CreditCard() {
       amount,
       published: false,
       createdAt: new Date().toISOString(),
-  };
-  // save the post
-  let response = await fetch('/api/cards', {
-      method: 'POST',
+    };
+    // save the post
+    let response = await fetch("/api/cards", {
+      method: "POST",
       body: JSON.stringify(card),
-  });
+    });
 
-  // get the data
-  let data = await response.json();
+    // get the data
+    let data = await response.json();
 
-  if (data.success) {
+    if (data.success) {
       // reset the fields
-      setOpened(true)
-      setModalText(data.user)
-      setModalSumm(data.userAmount)
+      setOpened(true);
+      setModalText(data.user);
+      setModalSumm(data.userAmount);
       // set the message
       return console.log(data.user);
-  } else {
+    } else {
       // set the error
-      return  console.log(data.message);
-  }
-
-
+      return console.log(data.message);
+    }
   }
 
   const blurHandler = (e) => {
@@ -179,18 +176,21 @@ export default function CreditCard() {
     <Container
       size={600}
       px={20}
-      style={{ backgroundImage: 'linear-gradient(to top right, lightblue, white)', borderRadius: 20, paddingTop: 20, marginTop: 30 }}
-      
+      style={{
+        backgroundImage: "linear-gradient(to top right, lightblue, white)",
+        borderRadius: 20,
+        paddingTop: 20,
+        marginTop: 30,
+      }}
     >
       <InputWrapper
-      
         id="input-demo"
         required
         label="Credit card information"
         description="Please enter your credit card information, we need some money"
       >
         <TextInput
-        style={{ marginTop: 20}}
+          style={{ marginTop: 20 }}
           label="Card Number"
           icon={<Num1 />}
           placeholder="0000 0000 0000 0000"
@@ -206,7 +206,7 @@ export default function CreditCard() {
         />
 
         <TextInput
-        style={{ marginTop: 20}}
+          style={{ marginTop: 20 }}
           label="Expiration Date"
           icon={<Calendar />}
           radius="md"
@@ -221,7 +221,7 @@ export default function CreditCard() {
           name="ExpData"
         />
         <TextInput
-        style={{ marginTop: 20}}
+          style={{ marginTop: 20 }}
           label="CVV"
           icon={<Key />}
           placeholder="123"
@@ -235,7 +235,7 @@ export default function CreditCard() {
           maxLength="3"
         />
         <TextInput
-        style={{ marginTop: 20}}
+          style={{ marginTop: 20 }}
           label="Amount"
           icon={<CurrencyRubel />}
           placeholder="10.000"
@@ -249,30 +249,27 @@ export default function CreditCard() {
           maxLength="7"
         />
       </InputWrapper>
-      {expDate}
+
       <Button
-      className={styles.button}
-        
-        
+        className={styles.button}
         variant="light"
         position="right"
         color="teal"
         loaderPosition="right"
         onClick={createGood}
-        disabled={formValid?false:true}
-        
+        disabled={formValid ? false : true}
       >
         Submit
       </Button>
       <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
-      title="Результаты оплаты:"
-    >
-      Номер для отслеживания: {modalText}
-      <br/>
-      Внесенная сумма: {modalSumm} руб.
-    </Modal>
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Результаты оплаты:"
+      >
+        Номер для отслеживания: {modalText}
+        <br />
+        Внесенная сумма: {modalSumm} руб.
+      </Modal>
     </Container>
   );
 }
