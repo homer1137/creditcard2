@@ -1,0 +1,43 @@
+.button{
+    color: rgb(35, 96, 14);
+    margin: 2rem;
+    position: relative;
+    left: 70%;
+    background-color: blanchedalmond;
+    position: relative;
+    z-index: 1;
+    border-radius: 3px;
+    padding: 2;
+    
+    
+}
+
+.button::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(164, 122, 183);
+    border-radius: 3px;
+    z-index: -1;
+    transition: transform 400ms ease-out;
+    transform: scaleX(0);
+    transform-origin: left;
+    
+    
+}
+
+.button:enabled:hover::before,
+.button:focus::before{
+    transform: scaleX(1);
+    
+    
+}
+
+
+
+.button:hover{
+    color:aqua;
+}

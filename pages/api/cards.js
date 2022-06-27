@@ -11,7 +11,8 @@ async function addCard(req, res) {
         const user = await db.collection('cards').findOne({createdAt: newCard.createdAt})
         // return a message
         return res.json({
-            user: {user},
+            user: user._id,
+            userAmount: user.amount,
             success: true,
         });
     } catch (error) {

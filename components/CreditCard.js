@@ -4,8 +4,9 @@ import {
   InputWrapper,
   Button,
   TextInput,
+  Modal,
 } from "@mantine/core";
-
+import styles from "./creditCard.module.css";
 import {
   Calendar,
   CurrencyRubel,
@@ -24,7 +25,7 @@ export default function CreditCard() {
   const [CVVDirty, setCVVDirty] = useState(false);
   const [expDateDirty, setExpDateDirty] = useState(false);
   const [amountDirty, setAmountDirty] = useState(false);
-
+  
   //состояние ошибок
   const [cardNumberError, setCardNumberError] = useState(
     'Поле "Card number" не может быть пустым'
@@ -37,7 +38,10 @@ export default function CreditCard() {
 
   //состояние валидности формы. нет ошибок. все поля заполнены. и тогда кнопка активна
   const [formValid, setFormValid] = useState(false);
-
+  //модальное окно и данные к нему
+  const [opened, setOpened] = useState(false);
+  const [modalText, setModalText] = useState('')
+  const [modalSumm, setModalSumm] = useState('')
   useEffect(() => {
     if (cardNumberError || expirationDateError || CVVError || amountError) {
       setFormValid(false);
@@ -89,6 +93,9 @@ export default function CreditCard() {
     const reg = /^\d*\.?\d*$/;
     if (!reg.test(String(e.target.value).toLowerCase())) {
       setamountError('В сумму только цифры и может быть одна "точка"');
+    }
+    if(e.target.value.length===0){
+      setamountError('Поле "Сумма" не может быть пустым')
     } else {
       setamountError("");
     }
@@ -119,10 +126,10 @@ export default function CreditCard() {
     setCVVError('Поле "CVV" не может быть пустым')
     setExpirationDateError('Поле "Expiration Date" не может быть пустым')
     setamountError('Введите сумму')
-
+    let newData = expDate.split('-').reverse().join('/')
     let card = {
       cardNumber,
-      expDate,
+      newData,
       CVV,
       amount,
       published: false,
@@ -139,7 +146,9 @@ export default function CreditCard() {
 
   if (data.success) {
       // reset the fields
-      
+      setOpened(true)
+      setModalText(data.user)
+      setModalSumm(data.userAmount)
       // set the message
       return console.log(data.user);
   } else {
@@ -170,7 +179,8 @@ export default function CreditCard() {
     <Container
       size={600}
       px={20}
-      style={{ background: "lightblue", borderRadius: 20 }}
+      style={{ backgroundImage: 'linear-gradient(to top right, lightblue, white)', borderRadius: 20, paddingTop: 20, marginTop: 30 }}
+      
     >
       <InputWrapper
       
@@ -239,8 +249,11 @@ export default function CreditCard() {
           maxLength="7"
         />
       </InputWrapper>
+      {expDate}
       <Button
-        style={{ marginTop: 30, marginBottom: 20 }}
+      className={styles.button}
+        
+        
         variant="light"
         position="right"
         color="teal"
@@ -251,9 +264,15 @@ export default function CreditCard() {
       >
         Submit
       </Button>
-      {expDate}
-      {amount}
-      formvalid {formValid}
+      <Modal
+      opened={opened}
+      onClose={() => setOpened(false)}
+      title="Результаты оплаты:"
+    >
+      Номер для отслеживания: {modalText}
+      <br/>
+      Внесенная сумма: {modalSumm} руб.
+    </Modal>
     </Container>
   );
 }
